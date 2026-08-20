@@ -1,0 +1,16 @@
+# 파이썬 가상환경 / 캐시
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# 측정 결과물 (필요하면 지우기)
+result_*.txt
+pcap_*.pcapng
+summary_*.txt
+flagged_*.txt
+
+# OS / 에디터
+.DS_Store
+.vscode/
+.idea/
