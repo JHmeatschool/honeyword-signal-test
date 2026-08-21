@@ -76,6 +76,38 @@ genuine vs honey를 7가지 signal로 비교:
 
 > honey는 LLM이라 느려서 전체 3~5분 소요.
 
+## 실험 결과 (Sample Run)
+
+아래는 `measure_pipeline.sh`를 실제로 돌린 출력이다. **로그인 앞단을 거친 뒤(=로그인 후 상호작용)** genuine vs honey를 비교했다. 로그인 응답 자체는 두 경로가 동일하고, 차이는 **로그인 이후 상호작용**에서만 나타난다.
+
+### [0] 로그인 응답 — 두 경로 동일 (content로 구별 불가)
+![login](docs/00_login.png)
+genuine·honey 모두 `status`·`accessToken`·`redirect` 구조가 동일. 값만 랜덤이라 로그인 응답만으로는 구별 불가.
+
+### [1] 타이밍 + [4] 비결정성
+![timing](docs/01_timing.png)
+genuine 약 0.21초·48B **고정** / honey 2.8~7.4초·53~115B **변동**.
+
+### [2] 거대응답 유도
+![generation-cost](docs/02_generation_cost.png)
+genuine 0.21초·27B / honey **13.08초·2355B**. 요청 하나로 생성비용을 능동 유도.
+
+### [3] 동시성 (부하)
+![concurrency](docs/03_concurrency.png)
+동시 요청 C=1/5/20에서 genuine은 flat(약 0.21초) / honey는 **C=20에서 11.48초로 급증**(추론큐 포화).
+
+### [5] 정체성 — 헤더는 masked
+![identity](docs/05_identity.png)
+genuine·honey 모두 `Server: uvicorn`으로 **동일**(공유 front-end가 헤더 정체성을 가림). 드리프트는 본문(LLM 생성부)에서만 → 사실상 비결정성과 겹침.
+
+### [6] 상태/인과 (CRUD)
+![state](docs/06_state_crud.png)
+genuine은 저장한 `MARK`가 조회에 **그대로**(상태 일관) / honey는 "저장 성공"이라면서 조회 시 **없음**(앞뒤 불일치).
+
+### [7] 프롬프트 인젝션
+![injection](docs/07_injection.png)
+genuine은 무시(데이터로 저장) / honey는 **복종**하여 `"id": "HONEYPOT_DETECTED"` 반환(디코이 노출).
+
 ## 계정 (seed.py)
 
 | username | 진짜 비번 | 허니워드(예) |
