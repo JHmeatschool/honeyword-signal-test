@@ -86,7 +86,7 @@ genuine·honey 모두 `status`·`accessToken`·`redirect` 구조가 동일. 값�
 
 ### [1] 타이밍 + [4] 비결정성
 ![timing](docs/01_timing.png)
-genuine 약 0.21초·48B **고정** / honey 2.8~7.4초·53~115B **변동**.
+genuine 약 0.21초·48B **고정** / honey 2.8-7.4초·53-115B **변동**.
 
 ### [2] 거대응답 유도
 ![generation-cost](docs/02_generation_cost.png)
